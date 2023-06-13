@@ -1,12 +1,12 @@
 import { createCart, Product, ProductCatalog, ProductOffers } from "./cart";
 const product1: Product = { name: "Dove", price: 39.99 };
 const product2: Product = { name: "Axe Soap", price: 99.99 };
-const productCatalogue: ProductCatalog = new Map([
+const productCatalogue: ProductCatalog<string, Product> = new Map([
   ["1", product1],
   ["2", product2],
 ]);
 
-const productOffers: ProductOffers = new Map([["1", [33.33]]]);
+const productOffers: ProductOffers<string> = new Map([["1", [33.33]]]);
 
 describe("shopping cart", () => {
   it("should initialize with 0 items", () => {

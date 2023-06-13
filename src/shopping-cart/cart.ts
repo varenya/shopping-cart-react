@@ -3,30 +3,29 @@ type Product = {
   name: string;
 };
 
-type productId = string;
+type ProductId<T> = T;
 
 type Offer = number;
 
-type ProductCatalog = Map<productId, Product>;
-type ProductOffers = Map<productId, Offer[]>;
+type ProductCatalog<ProductIdType, ProductType> = Map<
+  ProductId<ProductIdType>,
+  ProductType
+>;
+type ProductOffers<ProductIdType> = Map<ProductId<ProductIdType>, Offer[]>;
 
-type CartItem = Map<string, number>;
+type CartItem<ProductType> = Map<ProductType, number>;
 
 class ProductNotFound extends Error {}
 
-function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
-  return value !== null && value !== undefined;
-}
-
-function createCart({
+function createCart<ProductIdType, ProductType extends Product>({
   productCatalogue,
-  productOffers = new Map<string, Offer[]>(),
+  productOffers = new Map<ProductIdType, Offer[]>(),
 }: {
-  productCatalogue: ProductCatalog;
-  productOffers?: ProductOffers;
+  productCatalogue: ProductCatalog<ProductIdType, ProductType>;
+  productOffers?: ProductOffers<ProductIdType>;
 }) {
-  const cartItems: CartItem = new Map();
-  function addItem(productId: string, quantity: number) {
+  const cartItems: CartItem<ProductIdType> = new Map();
+  function addItem(productId: ProductIdType, quantity: number) {
     const selectedItem = productCatalogue.get(productId);
     if (!selectedItem) {
       throw new ProductNotFound();
@@ -35,7 +34,7 @@ function createCart({
     cartItems.set(productId, quantity + currentQuantity);
   }
   function getItems() {
-    const products: Product[] = [];
+    const products: ProductType[] = [];
     for (let productId of cartItems.keys()) {
       const product = productCatalogue.get(productId);
       if (product) {
