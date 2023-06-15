@@ -2,8 +2,10 @@ import React from "react";
 import { CheckIcon, ClockIcon, XMarkIcon } from "@heroicons/react/20/solid";
 
 import type { ProductItem } from "../models/Product";
+import { useCart } from "../shopping-cart/useCart";
 
 function ProductItem({ product }: { product: ProductItem }) {
+  const { getQuantity } = useCart();
   return (
     <li key={product.id} className="flex py-6 sm:py-10">
       <div className="flex-shrink-0">
@@ -45,6 +47,7 @@ function ProductItem({ product }: { product: ProductItem }) {
               Quantity, {product.name}
             </label>
             <select
+              value={getQuantity(product)}
               id={`quantity-${product.id}`}
               name={`quantity-${product.id}`}
               className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"

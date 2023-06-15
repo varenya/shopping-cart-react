@@ -1,4 +1,5 @@
 import { ProductItem } from "../models/Product";
+import { ProductCatalog } from "../shopping-cart/cart";
 
 const products: ProductItem[] = [
   {
@@ -39,4 +40,10 @@ const products: ProductItem[] = [
   },
 ];
 
-export { products };
+const initialProductCatalogue: ProductCatalog<number, ProductItem> = new Map();
+
+const productCatalogue = products.reduce((productMap, productItem) => {
+  return productMap.set(productItem.id, productItem);
+}, initialProductCatalogue);
+
+export { products, productCatalogue };

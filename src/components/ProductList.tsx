@@ -1,10 +1,29 @@
 import React from "react";
+import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { products } from "../mock-data/product-data";
+import { useCart } from "../shopping-cart/useCart";
+import { Link } from "react-router-dom";
+
 function ProductList() {
+  const { getTotalQuantity, updateCartItems } = useCart();
   return (
-    <div className="bg-white">
+    <div className="bg-white min-h-full">
+      <header className={"bg-indigo-500 py-8 px-4 flex"}>
+        <h1 className={"flex-1 text-3xl text-white text-center"}>
+          Shop The Tees
+        </h1>
+        <Link to={"/cart"}>
+          <div className={"flex justify-items-center gap-2 text-white"}>
+            <span className={"mt-0.5"}>{getTotalQuantity()}</span>
+            <ShoppingBagIcon
+              className="h-6 w-6 flex-shrink-0 text-white group-hover:text-gray-500"
+              aria-hidden="true"
+            />
+          </div>
+        </Link>
+      </header>
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-        <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+        <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:gap-x-8">
           {products.map((product) => (
             <div key={product.id}>
               <div className="relative">
@@ -32,12 +51,12 @@ function ProductList() {
                 </div>
               </div>
               <div className="mt-6">
-                <a
-                  href={product.href}
+                <button
+                  onClick={() => updateCartItems(product, 1)}
                   className="relative flex items-center justify-center rounded-md border border-transparent bg-gray-100 px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200"
                 >
                   Add to bag<span className="sr-only">, {product.name}</span>
-                </a>
+                </button>
               </div>
             </div>
           ))}

@@ -17,6 +17,8 @@ type CartItem<ProductType> = Map<ProductType, number>;
 
 class ProductNotFound extends Error {}
 
+class InvalidArgumentException extends Error {}
+
 function createCart<ProductIdType, ProductType extends Product>({
   productCatalogue,
   productOffers = new Map<ProductIdType, Offer[]>(),
@@ -27,12 +29,35 @@ function createCart<ProductIdType, ProductType extends Product>({
   const cartItems: CartItem<ProductIdType> = new Map();
   function addItem(productId: ProductIdType, quantity: number) {
     const selectedItem = productCatalogue.get(productId);
+    if (quantity <= 0) {
+      throw new InvalidArgumentException();
+    }
     if (!selectedItem) {
       throw new ProductNotFound();
     }
     const currentQuantity = cartItems.get(productId) || 0;
     cartItems.set(productId, quantity + currentQuantity);
   }
+  function getTotalQuantity() {
+    let quantity = 0;
+    for (let [_item, itemQuantity] of cartItems) {
+      quantity += itemQuantity;
+    }
+    return quantity;
+  }
+
+  function getQuantity(productId: ProductIdType) {
+    if (!cartItems.has(productId)) {
+      throw new ProductNotFound();
+    }
+    return cartItems.get(productId);
+  }
+
+  function removeItem(productId: ProductIdType) {
+    if (!productCatalogue.has(productId)) throw new ProductNotFound();
+    cartItems.delete(productId);
+  }
+
   function getItems() {
     const products: ProductType[] = [];
     for (let productId of cartItems.keys()) {
@@ -87,8 +112,12 @@ function createCart<ProductIdType, ProductType extends Product>({
     getItems,
     getTax,
     getTotalCost,
+    getCost,
+    getTotalQuantity,
+    getQuantity,
+    removeItem,
   };
 }
 
 export type { ProductCatalog, Product, ProductOffers };
-export { createCart };
+export { createCart, InvalidArgumentException, ProductNotFound };

@@ -1,9 +1,14 @@
-import { products } from "../mock-data/product-data";
+import React from "react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/20/solid";
 import { ProductItem } from "./ProductItem";
-import React from "react";
+import { useCart } from "../shopping-cart/useCart";
 
+let USDollar = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
 function ShoppingCart() {
+  const { cartItems, getCost, getTotal, getTax } = useCart();
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -20,7 +25,7 @@ function ShoppingCart() {
               role="list"
               className="divide-y divide-gray-200 border-b border-t border-gray-200"
             >
-              {products.map((product, productIdx) => (
+              {cartItems.map((product, productIdx) => (
                 <ProductItem product={product} key={product.id} />
               ))}
             </ul>
@@ -41,25 +46,9 @@ function ShoppingCart() {
             <dl className="mt-6 space-y-4">
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-gray-600">Subtotal</dt>
-                <dd className="text-sm font-medium text-gray-900">$99.00</dd>
-              </div>
-              <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                <dt className="flex items-center text-sm text-gray-600">
-                  <span>Shipping estimate</span>
-                  <a
-                    href="#"
-                    className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500"
-                  >
-                    <span className="sr-only">
-                      Learn more about how shipping is calculated
-                    </span>
-                    <QuestionMarkCircleIcon
-                      className="h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  </a>
-                </dt>
-                <dd className="text-sm font-medium text-gray-900">$5.00</dd>
+                <dd className="text-sm font-medium text-gray-900">
+                  {USDollar.format(getCost())}
+                </dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="flex text-sm text-gray-600">
@@ -77,13 +66,17 @@ function ShoppingCart() {
                     />
                   </a>
                 </dt>
-                <dd className="text-sm font-medium text-gray-900">$8.32</dd>
+                <dd className="text-sm font-medium text-gray-900">
+                  {USDollar.format(getTax())}
+                </dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="text-base font-medium text-gray-900">
                   Order total
                 </dt>
-                <dd className="text-base font-medium text-gray-900">$112.32</dd>
+                <dd className="text-base font-medium text-gray-900">
+                  {USDollar.format(getTotal())}
+                </dd>
               </div>
             </dl>
 
