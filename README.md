@@ -21,3 +21,6 @@ This app uses
 - pnpm
 - vite
 - vitest
+
+Node version required: 
+`v18.16.0`
